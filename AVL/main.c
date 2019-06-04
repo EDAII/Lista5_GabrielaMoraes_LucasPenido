@@ -4,12 +4,11 @@
 #include <stdio_ext.h>
 #include "funcoesMenu.h"
 #include "avl.h"
-// #include "treap.h"
 
 int main(int argc, char *argv[]){
     // Variáveis
-    int opcaoMenu, qtdNos, opcaoOperacao, valorDeletado, valorBuscado;
-    double inicio, fim, tempoPreenchimento;
+    int opcaoMenu, qtdNos, opcaoOperacao, opcaoOperacaoTreap, valorDeletado, valorBuscado;
+    double inicio, fim, tempoPreenchimento, tempoMontagem, tempoBusca, tempoRemocao;
     int *numerosArvore = NULL;
     noAvl *raizAvl, *novoNoAvl = NULL;
 
@@ -17,9 +16,9 @@ int main(int argc, char *argv[]){
         LIMPA_TELA;
         opcaoMenu = menu();
         switch(opcaoMenu){
-            case COMPARATIVO:
+            case AVL:
                 LIMPA_TELA;
-                printf("======================= COMPARATIVO =========================");
+                printf("======================= AVL =========================");
                 qtdNos = escolheQtdNos();
                 numerosArvore = (int *) malloc (qtdNos * sizeof(int));
                 inicio = clock();
@@ -38,10 +37,14 @@ int main(int argc, char *argv[]){
                 getchar();
                 printf("\n\nMontando árvore AVL...");
                 ctdRotacao = 0;
+                inicio = clock();
                 for(int i = 0; i < qtdNos; i++){
                     novoNoAvl = criaNovoNo(*(numerosArvore + i));
                     raizAvl = insereNo(raizAvl, novoNoAvl);
                 }
+                fim = clock();
+                tempoMontagem = ((double)(fim-inicio)/CLOCKS_PER_SEC);
+                printf("\n\nTempo para montagem da árvore: %lf s\n\n", tempoMontagem);
                 printf("\n\nQuantidade de rotações para inserir balanceado: %d", ctdRotacao);
                 printf("\n\nTravessia In Order ao final: ");
                 printf("[ ");
@@ -63,7 +66,11 @@ int main(int argc, char *argv[]){
                             ctdAcessos = 0;
                             printf("\n\nDigite o valor que deseja buscar: ");
                             scanf("%d", &valorBuscado);
+                            inicio = clock();
                             buscaValor(raizAvl, valorBuscado);
+                            fim = clock();
+                            tempoBusca = ((double)(fim-inicio)/CLOCKS_PER_SEC);
+                            printf("\n\nTempo para realizar busca: %lf s\n\n", tempoBusca);
                             printf("\n\nQuantidade de acessos para realizar busca: %d", ctdAcessos);
                         break;
                         case 2:
@@ -75,26 +82,25 @@ int main(int argc, char *argv[]){
                             printf("]");
                             printf("\n\nDigite o valor que deseja remover: ");
                             scanf("%d", &valorDeletado);
+                            inicio = clock();
                             raizAvl = removeValor(raizAvl, valorDeletado);
-                            printf("\n\nQuantidade de rotações para remover e balancear novamente: %d", ctdRotacao);
+                            fim = clock();
+                            tempoRemocao = ((double)(fim-inicio)/CLOCKS_PER_SEC);
+                            printf("\n\nTempo para realizar remoção: %lf s\n\n", tempoRemocao);
                             printf("\n\nQuantidade de acessos para realizar remoção: %d", ctdAcessos);
                             printf("\n\nTravessia In Order ao final: ");
                             printf("[ ");
                             imprimeInOrder(raizAvl);
-                            printf("]");
+                            printf("]\n\n");
+                            print2DUtil(raizAvl, 0);
                             printf("\n\nAperte ENTER para continuar... ");
                             LIMPA_BUFFER;
                             getchar();
                         break;
                     }
                 }while(opcaoOperacao != 0);
-                printf("\nMontando árvore Treap...");
-                printf("\n\nAperte ENTER para continuar... ");
-                LIMPA_BUFFER;
-                getchar();
-
             break;
-            
+
             case SAIR:
                 LIMPA_TELA;
                 printf("Liberando ponteiros");
