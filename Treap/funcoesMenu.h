@@ -11,11 +11,7 @@
 #endif
 
 //Constantes
-// #define AVL 1
-// #define RUBRONEGRA 2
-// #define TREAP 3
-// #define SPLAY 4
-#define COMPARATIVO 1
+#define TREAP 1
 #define SAIR 0
 #define REPETIDO 0
 #define NREPETIDO 1

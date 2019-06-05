@@ -4,9 +4,8 @@ int menu(){
     int escolha;
 
     printf("=============== Menu Principal ==========================");
-    printf("\n1. Iniciar comparativo*");
+    printf("\n1. AVL");
     printf("\n0. Sair");
-    printf("\n* -> O comparativo é realizado entre os seguintes algoritmos de árvore: AVL e Treap");
     printf("\n\nDigite o número da opção que deseja desempenhar: ");
     scanf("%d", &escolha);
     escolha = validaEscolha(escolha);
