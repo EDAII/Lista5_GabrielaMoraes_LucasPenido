@@ -186,12 +186,26 @@ struct node* SplayTree::delete_key(struct node *root, int key) {
 }
 
 // Emprime a pre ordem da árvore
-void SplayTree::preOrder(struct node *root)
-{
-  if (root != NULL)
-  {
-    printf("%d ", root->key);
+void SplayTree::preOrder(struct node *root) {
+  if (root != NULL) {
     preOrder(root->left);
+    printf("%d ", root->key);
     preOrder(root->right);
+  }
+}
+
+void SplayTree::inOrder(struct node *root) {
+  if (root != NULL) {
+    inOrder(root->left);
+    printf("%d ", root->key);
+    inOrder(root->right);
+  }
+}
+
+void SplayTree::posOrder(struct node *root) {
+  if (root != NULL) {
+    posOrder(root->left);
+    printf("%d ", root->key);
+    posOrder(root->right);
   }
 }

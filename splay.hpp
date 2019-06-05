@@ -10,7 +10,7 @@ struct node {
 class SplayTree {
 public:
     SplayTree() { }
-    
+
     struct node * newNode(int key);
     struct node * rightRotate(struct node *x);
     struct node * leftRotate(struct node *x);
@@ -19,6 +19,8 @@ public:
     node * insert(node *root, int key);
     struct node* delete_key(struct node *root, int key);
     void preOrder(struct node *root);
+    void inOrder(struct node *root);
+    void posOrder(struct node *root);
 };
 
 #endif
