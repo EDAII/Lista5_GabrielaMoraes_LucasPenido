@@ -13,6 +13,8 @@ struct Node {
 
 class Tree {
 public:
+    int ctdRotacao = 0;
+    int ctdAcessos = 0;
     Node * root;
 
     Tree() { root = NULL; }

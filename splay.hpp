@@ -7,8 +7,11 @@ struct node {
   node * right;
 };
 
+
 class SplayTree {
 public:
+    int ctdRotacao = 0;
+    int ctdAcessos = 0;
     SplayTree() { }
 
     struct node * newNode(int key);

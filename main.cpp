@@ -8,7 +8,7 @@ using namespace std;
 #define LIMPA_TELA system("clear");
 #define LIMPA_BUFFER fflush(stdin);
 
-#define Splay 1
+#define Criar 1
 #define SAIR 0
 #define REPETIDO 0
 #define NREPETIDO 1
@@ -36,7 +36,7 @@ int menu(){
   int escolha;
 
   printf("=============== Menu Principal ==========================");
-  printf("\n1. Splay");
+  printf("\n1. Criar arvores Splay e Vermelho e Preto");
   printf("\n0. Sair");
   printf("\n\nDigite o número da opção que deseja desempenhar: ");
   scanf("%d", &escolha);
@@ -52,7 +52,7 @@ int* preencheVetorAleatorio(int *vetor, int tamanho){
   // Instruções
   for (i = 0; i < tamanho; i++) {
      do {
-       vetor[i] = rand() % 1000000 + 1;
+       vetor[i] = rand() % 100000000 + 1;
        status =  NREPETIDO;
        for (aux = 0; (aux < i) && (status == NREPETIDO); aux++){
            if (vetor[i] == vetor[aux])
@@ -63,8 +63,19 @@ int* preencheVetorAleatorio(int *vetor, int tamanho){
   return vetor;
 }
 
+int* preencheVetorParaBusca(int *vetor, int tamanho) {
+  srand (time(NULL));
+  // Variáveis
+  int i, aux, status;
+  // Instruções
+  for (i = 0; i < tamanho; i++) {
+    vetor[i] = rand() % tamanho;
+  }
+  return vetor;
+}
+
 int validaOperacao(int operacao){
-  while(operacao < 0 || operacao > 2){
+  while(operacao < 0 || operacao > 5){
       printf("\nOpção inválida! Tente novamente");
       printf("\n\nDigite o número da operação que deseja desempenhar: ");
       scanf("%d", &operacao);
@@ -78,6 +89,9 @@ int menuOperacoes(){
     printf("\n\n=============== Operações ==========================");
     printf("\n1. Busca");
     printf("\n2. Remover");
+    printf("\n3. Em Ordem");
+    printf("\n4. Pre Ordem");
+    printf("\n5. Pos Ordem");
     printf("\n0. Sair");
     printf("\n\nDigite o número da operação que deseja desempenhar: ");
     scanf("%d", &operacao);
@@ -88,21 +102,21 @@ int menuOperacoes(){
 }
 
 int main() {
-  Tree arvore;
+  Tree arvoreVermelhoEPreto;
   SplayTree splayArvore;
   struct node *root = NULL;
 
   int opcaoMenu, qtdNos, opcaoOperacao, opcaoOperacaoTreap, valorDeletado, valorBuscado, ctdRotacao, ctdAcessos;
   double inicio, fim, tempoPreenchimento, tempoMontagem, tempoBusca, tempoRemocao;
   int *numerosArvore = NULL;
+  int *vetorBusca = NULL;
 
   do{
     LIMPA_TELA;
     opcaoMenu = menu();
     switch(opcaoMenu){
-      case Splay:
+      case Criar:
       LIMPA_TELA;
-      printf("======================= Splay =========================");
       qtdNos = escolheQtdNos();
       numerosArvore = (int *) malloc (qtdNos * sizeof(int));
       inicio = clock();
@@ -119,45 +133,72 @@ int main() {
       printf("\n\nAperte ENTER para continuar... ");
       LIMPA_BUFFER;
       getchar();
+      getchar();
+      printf("======================= Splay =========================");
       printf("\n\nMontando árvore Splay...");
-      ctdRotacao = 0;
+      splayArvore.ctdRotacao = 0;
       inicio = clock();
       for(int i = 0; i < qtdNos; i++){
         root = splayArvore.insert(root, *(numerosArvore + i));
       }
       fim = clock();
       tempoMontagem = ((double)(fim-inicio)/CLOCKS_PER_SEC);
-      printf("\n\nTempo para montagem da árvore: %lf s\n\n", tempoMontagem);
-      printf("\n\nQuantidade de rotações para inserir balanceado: %d", ctdRotacao);
-      printf("\n\nTravessia In Order ao final: ");
-      printf("[ ");
-      splayArvore.inOrder(root);
-      printf("]");
-      printf("\n\nTravessia Pre Order ao final: ");
-      printf("[ ");
-      splayArvore.preOrder(root);
-      printf("]");
-      printf("\n\nTravessia Pos Order ao final: ");
-      printf("[ ");
-      splayArvore.posOrder(root);
-      printf("]");
+      printf("\n\nTempo para montagem da árvore Splay: %lf s", tempoMontagem);
+      printf("\n\nQuantidade de rotações para inserir balanceado: %d", splayArvore.ctdRotacao);
+
+      printf("\n\n================== Vermelho e Preto ===================");
+      printf("\n\nMontando árvore Vermelho e Preto...");
+      arvoreVermelhoEPreto.ctdRotacao = 0;
+      inicio = clock();
+      for(int i = 0; i < qtdNos; i++){
+        arvoreVermelhoEPreto.insert(*(numerosArvore + i));
+      }
+      fim = clock();
+      tempoMontagem = ((double)(fim-inicio)/CLOCKS_PER_SEC);
+      printf("\n\nTempo para montagem da árvore Vermelho e Preto: %lf s", tempoMontagem);
+      printf("\n\nQuantidade de rotações para inserir balanceado: %d", arvoreVermelhoEPreto.ctdRotacao);
+
       do{
         opcaoOperacao = menuOperacoes();
         switch(opcaoOperacao){
           case 1:
-          ctdAcessos = 0;
-          printf("\n\nDigite o valor que deseja buscar: ");
+          vetorBusca = NULL;
+          printf("\n\nDigite quantidade de números que deseja buscar: ");
           scanf("%d", &valorBuscado);
+          vetorBusca = (int *) malloc (valorBuscado * sizeof(int));
+          vetorBusca = preencheVetorParaBusca(vetorBusca, valorBuscado);
+
+          splayArvore.ctdAcessos = 0;
+          splayArvore.ctdRotacao = 0;
           inicio = clock();
-          splayArvore.search(root, valorBuscado);
+          for (int i = 0; i < valorBuscado; i++) {
+            splayArvore.search(root, *(numerosArvore + i));
+          }
           fim = clock();
           tempoBusca = ((double)(fim-inicio)/CLOCKS_PER_SEC);
+          printf("======================= Splay =========================");
           printf("\n\nTempo para realizar busca: %lf s\n\n", tempoBusca);
-          printf("\n\nQuantidade de acessos para realizar busca: %d", ctdAcessos);
+          printf("\n\nQuantidade de acessos para realizar busca na Splay: %d", splayArvore.ctdAcessos);
+          printf("\n\nQuantidade de rotações para realizar a busca: %d", splayArvore.ctdRotacao);
+
+          arvoreVermelhoEPreto.ctdAcessos = 0;
+          arvoreVermelhoEPreto.ctdRotacao = 0;
+          inicio = clock();
+          for (int i = 0; i < valorBuscado; i++) {
+            arvoreVermelhoEPreto.find(*(numerosArvore + i));
+          }
+          fim = clock();
+          tempoBusca = ((double)(fim-inicio)/CLOCKS_PER_SEC);
+          printf("\n\n================== Vermelho e Preto ===================");
+          printf("\n\nTempo para realizar busca: %lf s\n\n", tempoBusca);
+          printf("\n\nQuantidade de acessos para realizar busca na Vermelho e Preto: %d", arvoreVermelhoEPreto.ctdAcessos);
+          printf("\n\nQuantidade de rotações para realizar a busca: %d", arvoreVermelhoEPreto.ctdRotacao);
+
           break;
           case 2:
-          ctdRotacao = 0;
-          ctdAcessos = 0;
+          printf("======================= Splay =========================");
+          splayArvore.ctdRotacao = 0;
+          splayArvore.ctdAcessos = 0;
           printf("\n\nTravessia In Order antes da remoção: ");
           printf("[ ");
           splayArvore.inOrder(root);
@@ -169,7 +210,11 @@ int main() {
           fim = clock();
           tempoRemocao = ((double)(fim-inicio)/CLOCKS_PER_SEC);
           printf("\n\nTempo para realizar remoção: %lf s\n\n", tempoRemocao);
-          printf("\n\nQuantidade de acessos para realizar remoção: %d", ctdAcessos);
+          printf("\n\nQuantidade de acessos para realizar remoção: %d", splayArvore.ctdAcessos);
+          printf("\n\nQuantidade de rotações para realizar a remoção: %d", splayArvore.ctdRotacao);
+          printf("\n\nAperte ENTER para continuar... ");
+          LIMPA_BUFFER;
+          getchar();
           printf("\n\nTravessia In Order ao final: ");
           printf("[ ");
           splayArvore.inOrder(root);
@@ -177,6 +222,36 @@ int main() {
           printf("\n\nAperte ENTER para continuar... ");
           LIMPA_BUFFER;
           getchar();
+          break;
+          case 3:
+          printf("\n\nTravessia In Order na Splay: ");
+          printf("[ ");
+          splayArvore.inOrder(root);
+          printf("]");
+          printf("\n\nTravessia In Order na Vermelho e Preto: ");
+          printf("[ ");
+          arvoreVermelhoEPreto.print_inorder();
+          printf("]");
+          break;
+          case 4:
+          printf("\n\nTravessia Pre Order na Splay: ");
+          printf("[ ");
+          splayArvore.preOrder(root);
+          printf("]");
+          printf("\n\nTravessia Pre Order na Vermelho e Preto: ");
+          printf("[ ");
+          arvoreVermelhoEPreto.print_preorder();
+          printf("]");
+          break;
+          case 5:
+          printf("\n\nTravessia Pos Order na Splay: ");
+          printf("[ ");
+          splayArvore.posOrder(root);
+          printf("]");
+          printf("\n\nTravessia Pos Order na Vermelho e Preto: ");
+          printf("[ ");
+          arvoreVermelhoEPreto.print_postorder();
+          printf("]");
           break;
         }
       }while(opcaoOperacao != 0);

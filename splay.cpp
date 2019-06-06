@@ -14,6 +14,7 @@ struct node * SplayTree::newNode(int key) {
 
 /* Rotaciona para a direita o nó x */
 struct node * SplayTree::rightRotate(struct node *x) {
+  ctdRotacao++;
   struct node *y = x->left;
   x->left = y->right;
   y->right = x;
@@ -22,6 +23,7 @@ struct node * SplayTree::rightRotate(struct node *x) {
 
 /* Roraciona para a esquerda o nó x */
 struct node * SplayTree::leftRotate(struct node *x) {
+  ctdRotacao++;
   struct node *y = x->right;
   x->right = y->left;
   y->left = x;
@@ -32,8 +34,8 @@ struct node * SplayTree::leftRotate(struct node *x) {
 // A função splay traz a chave desejada para a raiz se ele estiver presente na árvore
 // Se a chave não estiver presente, então traz para a raiz o último nó acessado
 // Esta função modifica a árvore e retorna a raiz.
-struct node * SplayTree::splay(struct node *node, int key)
-{
+struct node * SplayTree::splay(struct node *node, int key) {
+  ctdAcessos++;
   // O nó é nulo ou a chave foi encontrada
   if (node == NULL || node->key == key)
   return node;
@@ -188,8 +190,8 @@ struct node* SplayTree::delete_key(struct node *root, int key) {
 // Emprime a pre ordem da árvore
 void SplayTree::preOrder(struct node *root) {
   if (root != NULL) {
-    preOrder(root->left);
     printf("%d ", root->key);
+    preOrder(root->left);
     preOrder(root->right);
   }
 }
@@ -205,7 +207,7 @@ void SplayTree::inOrder(struct node *root) {
 void SplayTree::posOrder(struct node *root) {
   if (root != NULL) {
     posOrder(root->left);
-    printf("%d ", root->key);
     posOrder(root->right);
+    printf("%d ", root->key);
   }
 }

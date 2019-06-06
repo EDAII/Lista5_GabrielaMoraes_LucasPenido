@@ -233,6 +233,7 @@ void Tree::erase(int element){
 }
 
 void Tree::rotate_right(Node *gr, Node *par, Node *ch){
+  ctdRotacao++;
   //Rotaciona para a direita os nós
 
   if (gr != NULL) {
@@ -260,6 +261,7 @@ void Tree::rotate_right(Node *gr, Node *par, Node *ch){
 }
 
 void Tree::rotate_left(Node *gr, Node *par, Node *ch){
+  ctdRotacao ++;
   //Rotaciona para a esquerda os
 
   if (gr != NULL) {
@@ -293,6 +295,7 @@ bool Tree::find(int element){
 
   temp = root;
   while (temp != NULL) {
+    ctdAcessos++;
     if (element == temp->value) {
       return true;
     }
